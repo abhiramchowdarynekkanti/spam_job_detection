@@ -6,7 +6,10 @@ import numpy as np
 import streamlit.components.v1 as components
 from pathlib import Path
 from utils.preprocessing import preprocess_dataframe
-st.write("✅ App has started running.")
+st.set_page_config(page_title="Fraudulent Job Detector", layout="wide")
+
+# Then continue normally
+st.title("Welcome to Job Fraud Detection App")
 
 #st.set_option('deprecation.showPyplotGlobalUse', False)
 import pickle, shap, joblib
