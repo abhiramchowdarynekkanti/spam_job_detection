@@ -115,10 +115,7 @@ with tab_single:
         df_one = pd.DataFrame([inputs])
         df_proc = preprocess_dataframe(df_one)
         X_text = vectorizer.transform(df_proc["text"])
-        X_full = np.hstack([
-            X_text.toarray(),
-            df_proc[["character_count", "telecommuting", "has_company_logo"]].values
-        ])
+        X_full = X_text
 
         pred = model.predict(X_full)[0]
         decision = model.decision_function(X_full)[0]
