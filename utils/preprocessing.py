@@ -1,5 +1,12 @@
 # utils/preprocessing.py
 from __future__ import annotations
+import nltk
+
+# Download required NLTK data packages quietly at runtime
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('omw-1.4', quiet=True)
 
 import re
 import pandas as pd
