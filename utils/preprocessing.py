@@ -4,6 +4,12 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk import word_tokenize
 import nltk
+import nltk
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
 # Ensure required NLTK resources are downloaded
 for pkg in ("stopwords", "punkt", "wordnet", "omw-1.4"):
