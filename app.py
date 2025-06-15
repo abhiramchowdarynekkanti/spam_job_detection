@@ -8,7 +8,7 @@ from pathlib import Path
 from utils.preprocessing import preprocess_dataframe
 st.write("✅ App has started running.")
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
+#st.set_option('deprecation.showPyplotGlobalUse', False)
 import pickle, shap, joblib
 import matplotlib.pyplot as plt
 ARTIFACT_PATH = Path(__file__).parent / "model"
