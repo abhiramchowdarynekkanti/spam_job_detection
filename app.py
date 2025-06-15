@@ -11,7 +11,7 @@ st.write("✅ App has started running.")
 #st.set_option('deprecation.showPyplotGlobalUse', False)
 import pickle, shap, joblib
 import matplotlib.pyplot as plt
-ARTIFACT_PATH = Path(__file__).parent / "model"
+ARTIFACT_PATH = Path(__file__).parent / "models"
 vectorizer = pickle.load(open(ARTIFACT_PATH / "vectorizer.pkl", "rb"))
 model = pickle.load(open(ARTIFACT_PATH / "classifier.pkl", "rb"))
 
