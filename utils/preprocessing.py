@@ -22,6 +22,21 @@ for pkg in _NLTK_PACKAGES:
         nltk.data.find(f"corpora/{pkg}")  # punkt lives in tokenizers/, but this works for all
     except LookupError:
         nltk.download(pkg, quiet=True)
+import nltk
+
+# Always ensure the required packages are downloaded
+def ensure_nltk_resource(resource: str, download_if_missing=True):
+    try:
+        nltk.data.find(resource)
+    except LookupError:
+        if download_if_missing:
+            nltk.download(resource.split("/")[-1], quiet=True)
+
+# Ensure all required resources
+ensure_nltk_resource("tokenizers/punkt")
+ensure_nltk_resource("corpora/stopwords")
+ensure_nltk_resource("corpora/wordnet")
+ensure_nltk_resource("corpora/omw-1.4")
 
 # Initialize once
 STOPWORDS = set(stopwords.words("english"))
