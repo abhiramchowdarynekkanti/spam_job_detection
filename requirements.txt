@@ -4,5 +4,5 @@ pandas==2.2.2
 numpy==1.26.4
 matplotlib==3.9.0
 nltk==3.8.1
-shap==0.44.1          # 👈 0.44.1 has pre‑built wheels for Py3.9 on Linux
-joblib==1.4.2
+shap==0.48.0     # latest as of 12 Jun 2025 :contentReference[oaicite:0]{index=0}
+joblib==1.5.0
