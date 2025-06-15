@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import streamlit.components.v1 as components
 from pathlib import Path
 from utils.preprocessing import preprocess_dataframe
+import streamlit as st
+st.write("✅ App has started running.")
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
