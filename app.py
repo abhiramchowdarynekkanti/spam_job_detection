@@ -105,7 +105,8 @@ with tab_single:
         "description", "requirements", "benefits",
         "employment_type", "required_experience", "required_education",
         "industry", "function"]:
-        inputs[col] = form.text_area(f"{col.capitalize()}", height=60)
+        inputs[col] = form.text_area(f"{col.capitalize()}", height=80)
+
     col_tele, col_logo = form.columns(2)
     inputs["telecommuting"] = col_tele.selectbox("Telecommuting?", [0, 1])
     inputs["has_company_logo"] = col_logo.selectbox("Has Company Logo?", [0, 1])
