@@ -11,7 +11,6 @@ import matplotlib.pyplot as plt
 st.set_page_config(page_title="Fraudulent Job Detector", layout="wide")
 
 st.write("✅ App has started running.")
-st.set_option('deprecation.showPyplotGlobalUse', False)
 
 ARTIFACT_PATH = Path(__file__).parent / "models"
 vectorizer = pickle.load(open(ARTIFACT_PATH / "vectorizer.pkl", "rb"))
