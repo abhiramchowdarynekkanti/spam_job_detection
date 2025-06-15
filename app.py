@@ -1,4 +1,4 @@
-import pickle, shap, joblib
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,7 +10,7 @@ import streamlit as st
 st.write("✅ App has started running.")
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
+import pickle, shap, joblib
 ARTIFACT_PATH = Path(__file__).parent / "model"
 vectorizer = pickle.load(open(ARTIFACT_PATH / "vectorizer.pkl", "rb"))
 model = pickle.load(open(ARTIFACT_PATH / "classifier.pkl", "rb"))
