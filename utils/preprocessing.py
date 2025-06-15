@@ -16,6 +16,28 @@ from nltk.tokenize import word_tokenize
 # 1️⃣  Ensure required NLTK assets are present
 # ──────────────────────────────────────────────────────────────
 _NLTK_PACKAGES: List[str] = ["punkt", "stopwords", "wordnet", "omw-1.4"]
+import re
+import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+from nltk import word_tokenize
+
+# ✅ Robust downloader for NLTK resources — runs every time, avoids LookupError
+def ensure_nltk_resource(resource_path: str, resource_name: str = None):
+    try:
+        nltk.data.find(resource_path)
+    except LookupError:
+        nltk.download(resource_name or resource_path.split("/")[-1], quiet=True)
+
+# ✅ Ensure required resources are always available
+ensure_nltk_resource("tokenizers/punkt", "punkt")
+ensure_nltk_resource("corpora/stopwords")
+ensure_nltk_resource("corpora/wordnet")
+ensure_nltk_resource("corpora/omw-1.4")
+
+STOPWORDS = set(stopwords.words("english"))
+LEMMATIZER = WordNetLemmatizer()
 
 for pkg in _NLTK_PACKAGES:
     try:
