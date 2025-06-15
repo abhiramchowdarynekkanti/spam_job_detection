@@ -1,19 +1,18 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
-
 import streamlit.components.v1 as components
 from pathlib import Path
 from utils.preprocessing import preprocess_dataframe
-st.set_page_config(page_title="Fraudulent Job Detector", layout="wide")
-
-# Then continue normally
-st.title("Welcome to Job Fraud Detection App")
-
-#st.set_option('deprecation.showPyplotGlobalUse', False)
 import pickle, shap, joblib
 import matplotlib.pyplot as plt
+
+# ✅ MUST be the first Streamlit command
+st.set_page_config(page_title="Fraudulent Job Detector", layout="wide")
+
+st.write("✅ App has started running.")
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 ARTIFACT_PATH = Path(__file__).parent / "models"
 vectorizer = pickle.load(open(ARTIFACT_PATH / "vectorizer.pkl", "rb"))
 model = pickle.load(open(ARTIFACT_PATH / "classifier.pkl", "rb"))
@@ -29,7 +28,6 @@ def st_shap(plot, height=400):
     shap_html = f"<head>{shap.getjs()}</head><body>{plot.html()}</body>"
     components.html(shap_html, height=height, scrolling=True)
 
-st.set_page_config(page_title="Fraudulent Job Detector", layout="wide")
 st.title("🕵️‍♂️ Fraudulent Job Post Detection")
 
 tab_upload, tab_single = st.tabs(["📁 Upload CSV", "📝 Single Entry"])
@@ -141,3 +139,4 @@ with tab_single:
 
         force_plot = shap.plots.force(explainer.expected_value, shap_vals[0], matplotlib=False)
         st_shap(force_plot)
+
