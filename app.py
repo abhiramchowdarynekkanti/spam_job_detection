@@ -27,10 +27,7 @@ with tab_upload:
     if csv_file:
         df_raw = pd.read_csv(csv_file)
         df_proc = preprocess_dataframe(df_raw)
-        X_text = vectorizer.transform(df_proc["text"])
-        X_full = np.hstack([X_text.toarray(),
-                            df_proc[["character_count","telecommuting",
-                                     "has_company_logo"]].values])
+        X_full = vectorizer.transform(df_proc["text"])
         preds = model.predict(X_full)
         decision = model.decision_function(X_full)
         prob = 1 / (1 + np.exp(-decision))
