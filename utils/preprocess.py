@@ -50,3 +50,4 @@ def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     # Only return text column (used for TF-IDF)
     return df[["text"]]
+
