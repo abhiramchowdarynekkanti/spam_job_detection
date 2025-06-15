@@ -1,59 +1,95 @@
-import re, string, pickle
+# utils/preprocessing.py
+from __future__ import annotations
+
+import re
+import string
+from pathlib import Path
+from typing import List
+
 import pandas as pd
+import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from nltk import word_tokenize
-import nltk
-import nltk
+from nltk.tokenize import word_tokenize
 
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+# ──────────────────────────────────────────────────────────────
+# 1️⃣  Ensure required NLTK assets are present
+# ──────────────────────────────────────────────────────────────
+_NLTK_PACKAGES: List[str] = ["punkt", "stopwords", "wordnet", "omw-1.4"]
 
-# Ensure required NLTK resources are downloaded
-for pkg in ("stopwords", "punkt", "wordnet", "omw-1.4"):
+for pkg in _NLTK_PACKAGES:
     try:
-        nltk.data.find(f"corpora/{pkg}")
+        nltk.data.find(f"corpora/{pkg}")  # punkt lives in tokenizers/, but this works for all
     except LookupError:
-        nltk.download(pkg)
+        nltk.download(pkg, quiet=True)
 
+# Initialize once
 STOPWORDS = set(stopwords.words("english"))
 LEMMATIZER = WordNetLemmatizer()
 
-TEXT_COLS = [
-    "title", "location", "department", "company_profile", "description",
-    "requirements", "benefits", "employment_type", "required_experience",
-    "required_education", "industry", "function",
+# ──────────────────────────────────────────────────────────────
+# 2️⃣  Columns we care about (if present)
+# ──────────────────────────────────────────────────────────────
+TEXT_COLS: List[str] = [
+    "title",
+    "location",
+    "department",
+    "company_profile",
+    "description",
+    "requirements",
+    "benefits",
+    "employment_type",
+    "required_experience",
+    "required_education",
+    "industry",
+    "function",
 ]
 
-def clean_text(text: str) -> str:
+# ──────────────────────────────────────────────────────────────
+# 3️⃣  Text‑cleaning helper
+# ──────────────────────────────────────────────────────────────
+def _clean_text(text: str | None) -> str:
+    """Lower‑case, strip URLs / digits / punctuation, remove stop‑words, lemmatize."""
     if not isinstance(text, str):
         text = ""
+
     text = text.lower()
-    text = re.sub(r"http\S+", " ", text)
-    text = re.sub(r"[0-9]", " ", text)
-    text = re.sub(r"[^a-z\s]", " ", text)
-    tokens = [
+    text = re.sub(r"http\S+", " ", text)           # remove URLs
+    text = re.sub(r"\d+", " ", text)               # remove digits
+    text = re.sub(r"[^a-z\s]", " ", text)          # keep letters & spaces
+    text = re.sub(r"\s+", " ", text).strip()       # collapse whitespace
+
+    tokens = (
         LEMMATIZER.lemmatize(tok)
         for tok in word_tokenize(text)
-        if tok not in STOPWORDS and len(tok) < 25
-    ]
+        if tok not in STOPWORDS and 1 < len(tok) < 25
+    )
     return " ".join(tokens)
 
+
+# ──────────────────────────────────────────────────────────────
+# 4️⃣  Public API
+# ──────────────────────────────────────────────────────────────
 def preprocess_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Returns a copy of *df* with a single column **text** that is
+    cleaned and ready for TF‑IDF or other NLP pipelines.
+    """
     df = df.copy()
-    
-    # Fill NA and build unified 'text' column
+
+    # Ensure every expected text column exists as a string
     for col in TEXT_COLS:
-        if col in df.columns:
-            df[col] = df[col].fillna("")
+        if col not in df.columns:
+            df[col] = ""
+        df[col] = df[col].astype(str).fillna("")
+
+    # Build unified raw text (existing 'text' column wins if supplied)
     if "text" not in df.columns:
         df["text"] = df[TEXT_COLS].agg(" ".join, axis=1)
 
-    # Clean the text
-    df["text"] = df["text"].apply(clean_text)
+    # Clean it
+    df["text"] = df["text"].apply(_clean_text)
 
-    # Only return text column (used for TF-IDF)
+    # Return only the column your model needs
     return df[["text"]]
 
